@@ -1,0 +1,70 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import sklearn
+
+# Todo grafico no python tem 2 passos, voce cria o grafico e voce exibe o grafico
+
+# Criar o grafico
+sns.heatmap(tabela.corr(), cmap='Wistia', annot=True)  #.corr() é a correlação das infos ta tabela > cmap= cor para resepresentar > annot= passa os numeros dentro dos quadradinhos
+
+# Exibir o grafico
+plt.show()
+
+# Dividir em dados de treino(exercicios de aprendizagem) e dados de teste (info que passa depois para a IA para saber se ela aprendeu)
+
+# Quero prever as vendas, elas serão os dados de Y - O restante tv,radio e jornal serao dados de Y
+
+y = tabela['Vendas']
+x = tabela[['TV', 'Radio', 'Jornal']] #sempre que for selecionar mais de UMA coluna colocar 2 colchetes
+
+# Separação dados de treino e dados de teste
+
+from sklearn.model_selection import train_test_split # Pegando um "livro" do sklearn > train_test_split faz uma divisao entre dados de teino e de teste
+
+x_treino, x_teste, y_treino, y_teste = train_test_split(x, y, test_size=0.3, random_state=1) #test size = 70% treino e 30% teste, parametro random_state=1> embaralhe de forma aleatoria, porem sem mudar o resultado
+
+# MODELO DE INTELIGENCIA ARTIFICIAL
+# 1 - Regressão linear
+# 2 - RandomForest
+
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+
+# Criar os modelos
+modelo_regressaolinear = LinearRegression()
+modelo_arvoredecisao = RandomForestRegressor()
+
+# Treinar os modelos
+modelo_regressaolinear.fit(x_treino, y_treino)
+modelo_arvoredecisao.fit(x_treino, y_treino)
+
+previsao_regressaolinear = modelo_regressaolinear.predict(x_teste) # .predict > cria a previsao
+previsao_arvoredecisao = modelo_arvoredecisao.predict(x_teste)
+
+from sklearn import metrics
+
+print(metrics.r2_score(y_teste, previsao_regressaolinear)) # calcula a comparação entre a previsao da regressao linear e o y_teste
+print(metrics.r2_score(y_teste, previsao_arvoredecisao))
+
+# ARVORE DE DECISAO E O MELHOR MODELO - UTILIZAR ELE
+# comparação dos 2 modelos em grafico
+
+tabela_auxiliar = pd.DataFrame() #tabela vazia > pd.DataFrame()
+tabela_auxiliar['y_teste'] = y_teste #adicionando colunas
+tabela_auxiliar['Previsao Regressao Linear'] = previsao_regressaolinear #adicionando colunas
+tabela_auxiliar['Previsao ArvoreDecisao'] = previsao_arvoredecisao #adicionando colunas
+
+plt.figure(figsize=(15, 6)) #aumentar tamho do grafico
+sns.lineplot(data=tabela_auxiliar) #grafico de linhas
+plt.show() # mostrar graficos
+
+# Percebea que o verde e o azul adam juntos, e o laranja sai muito as vezes.
+
+# Importar tabela com novos dados que voce quer prever.
+
+nova_tabela = pd.read_csv('novos.csv')
+display(nova_tabela)
+
+#usar o modelo_arvoredecisao e fazr um .predict com ele
+previsao = modelo_arvoredecisao.predict(nova_tabela)
+print(previsao)
