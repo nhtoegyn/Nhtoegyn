@@ -1,0 +1,15 @@
+; Project Aether 3D Multiplayer Starter - Godot 4.7.x
+config_version=5
+
+[application]
+config/name="Project Aether - 3D Multiplayer Starter"
+run/main_scene="res://Main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=800
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
